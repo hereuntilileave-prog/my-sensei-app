@@ -8,7 +8,6 @@
         :root {
             --bg-light: #ffffff;
             --card-white: #f8fafc;
-            --input-bg: #f1f5f9;
             --accent-red: #ff2a5f;
             --border-color: #cbd5e1;
             --text-dark: #0f172a;
@@ -65,10 +64,10 @@
         .field-group {
             margin-bottom: 18px;
         }
-        select, input {
+        select, input[type="text"] {
             width: 100%;
             padding: 12px;
-            background-color: var(--input-bg);
+            background-color: #f1f5f9;
             border: 1px solid var(--border-color);
             color: var(--text-dark);
             font-family: inherit;
@@ -76,9 +75,10 @@
             box-sizing: border-box;
             border-radius: 6px;
         }
-        .toggle-grid {
+        /* Mobile-proof selector system using hidden radios */
+        .selector-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px;
             margin-bottom: 20px;
         }
@@ -88,20 +88,27 @@
             gap: 8px;
             margin-bottom: 25px;
         }
-        .btn-option {
-            background-color: var(--input-bg);
+        .selector-grid label, .dpi-grid label {
+            display: block;
+            background-color: #f1f5f9;
             border: 1px solid var(--border-color);
             color: var(--text-dark);
             padding: 12px 5px;
             font-size: 13px;
             font-weight: bold;
-            cursor: pointer;
             text-transform: uppercase;
-            font-family: inherit;
-            border-radius: 6px;
             text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
         }
-        .btn-option.active {
+        .selector-grid input[type="radio"], .dpi-grid input[type="radio"] {
+            display: none;
+        }
+        /* Visual active states triggered natively by browser mechanics */
+        .selector-grid input[type="radio"]:checked + label,
+        .dpi-grid input[type="radio"]:checked + label {
             background-color: var(--accent-red);
             border-color: var(--accent-red);
             color: white;
@@ -121,9 +128,10 @@
             letter-spacing: 1px;
             margin-bottom: 25px;
             box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+            transition: background-color 0.2s;
         }
         .btn-action-trigger:active {
-            background: #ff2a5f;
+            background: var(--accent-red);
         }
         .output-panel {
             border: 2px dashed var(--accent-red);
@@ -131,30 +139,14 @@
             padding: 20px;
             border-radius: 8px;
             display: none;
+            white-space: pre-line;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
         }
         .output-panel.visible {
             display: block;
-        }
-        .terminal-row {
-            display: flex;
-            margin-bottom: 10px;
-            font-size: 15px;
-        }
-        .term-label {
-            width: 150px;
-            color: var(--text-dark);
-            font-weight: 600;
-        }
-        .term-dots {
-            color: var(--text-muted);
-            margin-right: 12px;
-        }
-        .term-val {
-            color: var(--accent-red);
-            font-weight: bold;
-        }
-        .term-val.highlight {
-            color: #0d9488;
         }
     </style>
 </head>
@@ -182,79 +174,101 @@
     </div>
 
     <label class="input-label">Sight Calibration</label>
-    <div class="toggle-grid">
-        <div class="btn-option active" id="opt-high" onclick="selectRange('HIGH')">Alta</div>
-        <div class="btn-option" id="opt-medium" onclick="selectRange('MEDIUM')">Media</div>
-        <div class="btn-option" id="opt-low" onclick="selectRange('LOW')">Baja</div>
+    <div class="selector-grid">
+        <div>
+            <input type="radio" name="rangeGroup" id="range-high" value="HIGH" checked>
+            <label for="range-high">Alta</label>
+        </div>
+        <div>
+            <input type="radio" name="rangeGroup" id="range-medium" value="MEDIUM">
+            <label for="range-medium">Media</label>
+        </div>
+        <div>
+            <input type="radio" name="rangeGroup" id="range-low" value="LOW">
+            <label for="range-low">Baja</label>
+        </div>
     </div>
 
     <label class="input-label">DPI Profiler</label>
     <div class="dpi-grid">
-        <div class="btn-option active" id="opt-con" onclick="selectDpiMode('CON DPI')">Con DPI</div>
-        <div class="btn-option" id="opt-sin" onclick="selectDpiMode('SIN DPI')">Sin DPI</div>
+        <div>
+            <input type="radio" name="dpiGroup" id="dpi-con" value="CON DPI" checked>
+            <label for="dpi-con">Con DPI</label>
+        </div>
+        <div>
+            <input type="radio" name="dpiGroup" id="dpi-sin" value="SIN DPI">
+            <label for="dpi-sin">Sin DPI</label>
+        </div>
     </div>
 
-    <!-- NEW DEDICATED GENERATOR TRIGGER BUTTON -->
     <button type="button" class="btn-action-trigger" onclick="processAiCalibration()">Generate AI Config</button>
 
-    <div class="output-panel" id="outputPanel">
-        <div class="terminal-row" style="justify-content: center; color: var(--text-dark); margin-bottom: 15px; font-weight: bold; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">=== SENSEI PROFILE CONFIG ===</div>
-        <div class="terminal-row"><span class="term-label">General</span><span class="term-dots">:</span><span class="term-val" id="out-gen">-</span></div>
-        <div class="terminal-row"><span class="term-label">Red Dot</span><span class="term-dots">:</span><span class="term-val" id="out-red">-</span></div>
-        <div class="terminal-row"><span class="term-label">2x Scope</span><span class="term-dots">:</span><span class="term-val" id="out-2x">-</span></div>
-        <div class="terminal-row"><span class="term-label">4x Scope</span><span class="term-dots">:</span><span class="term-val" id="out-4x">-</span></div>
-        <div class="terminal-row"><span class="term-label">Button Size</span><span class="term-dots">:</span><span class="term-val" id="out-btn">-</span></div>
-        <div class="terminal-row"><span class="term-label">Dpi</span><span class="term-dots">:</span><span class="term-val highlight" id="out-dpi">-</span></div>
-    </div>
+    <div class="output-panel" id="outputPanel"></div>
 </div>
 
 <script>
-// Track configuration states independently
-let globalRange = 'HIGH';
-let globalDpiMode = 'CON DPI';
-
-function selectRange(rangeValue) {
-    globalRange = rangeValue;
-    document.getElementById('opt-high').classList.remove('active');
-    document.getElementById('opt-medium').classList.remove('active');
-    document.getElementById('opt-low').classList.remove('active');
-    
-    if (rangeValue === 'HIGH') document.getElementById('opt-high').classList.add('active');
-    else if (rangeValue === 'MEDIUM') document.getElementById('opt-medium').classList.add('active');
-    else if (rangeValue === 'LOW') document.getElementById('opt-low').classList.add('active');
-}
-
-function selectDpiMode(modeValue) {
-    globalDpiMode = modeValue;
-    document.getElementById('opt-con').classList.remove('active');
-    document.getElementById('opt-sin').classList.remove('active');
-    
-    if (modeValue === 'CON DPI') document.getElementById('opt-con').classList.add('active');
-    else if (modeValue === 'SIN DPI') document.getElementById('opt-sin').classList.add('active');
-}
-
 function processAiCalibration() {
     const brand = document.getElementById('brandSelect').value;
-    const model = document.getElementById('modelInput').value.trim().toUpperCase() || "GENERIC";
+    const model = document.getElementById('modelInput').value.trim().toUpperCase() || "DEVICE";
+    
+    // Natively fetch value parameters from active options box
+    const activeRange = document.querySelector('input[name="rangeGroup"]:checked').value;
+    const activeDpiMode = document.querySelector('input[name="dpiGroup"]:checked').value;
 
-    // Mathematical blueprint to secure accurate tracking dynamics
-    let general = 95, redDot = 80, scope2x = 88, scope4x = 84, button = 46, dpiOutput = "Standard";
+    // AI Math Blueprint formulas matching SystemWoods target physics
+    let general = 98, redDot = 85, scope2x = 90, scope4x = 88, buttonSize = 46, finalDpi = "Standard";
 
-    // 1. Calibration Profiles Matrices
-    if (globalRange === 'HIGH') {
-        general = 193; redDot = 63; scope2x = 126; scope4x = 121; button = 44;
-    } else if (globalRange === 'MEDIUM') {
-        general = 172; redDot = 74; scope2x = 110; scope4x = 104; button = 48;
-    } else if (globalRange === 'LOW') {
-        general = 145; redDot = 82; scope2x = 95; scope4x = 90; button = 52;
+    if (activeRange === 'HIGH') {
+        general = 193; redDot = 63; scope2x = 126; scope4x = 121; buttonSize = 44;
+    } else if (activeRange === 'MEDIUM') {
+        general = 175; redDot = 72; scope2x = 114; scope4x = 108; buttonSize = 47;
+    } else if (activeRange === 'LOW') {
+        general = 148; redDot = 80; scope2x = 98; scope4x = 92; buttonSize = 50;
     }
 
-    // 2. Hardware Model Character Hash Processing (Unique dynamic shift for every specific typed model)
-    let modelWeight = 0;
+    // Hash computation to guarantee model variation unique outputs
+    let characterSum = 0;
     for (let i = 0; i < model.length; i++) {
-        modelWeight += model.charCodeAt(i);
+        characterSum += model.charCodeAt(i);
     }
-    let balanceShift = (modelWeight % 8) - 4; // safely shifts data output points up or down slightly
+    let hardwareVariance = (characterSum % 6) - 3; // range shift adjustments (-3 to +3)
 
-    general = Math.max(90, Math.min(200, general + balanceShift));
-    redDot = Math.max(50, Math.min(100, redDot + Math.round(balanceShift / 2)));
+    general = Math.max(90, Math.min(200, general + hardwareVariance));
+    redDot = Math.max(50, Math.min(100, redDot + Math.round(hardwareVariance / 2)));
+    scope2x = Math.max(75, Math.min(150, scope2x + hardwareVariance));
+    scope4x = Math.max(75, Math.min(150, scope4x + hardwareVariance));
+
+    if (activeDpiMode === 'CON DPI') {
+        buttonSize = Math.max(41, buttonSize - 2);
+        if (brand === 'Samsung') finalDpi = (420 + (characterSum % 40));
+        else if (brand === 'Xiaomi') finalDpi = (460 + (characterSum % 45));
+        else if (brand === 'Infinix' || brand === 'Tecno') finalDpi = (510 + (characterSum % 35));
+        else if (brand === 'Apple') {
+            finalDpi = "Standard (iOS optimization active)";
+            general = Math.round(general * 0.78);
+        } else finalDpi = (440 + (characterSum % 40));
+    } else {
+        finalDpi = "Standard";
+        general = Math.round(general * 0.84);
+        buttonSize = Math.max(46, buttonSize + 2);
+    }
+
+    // Build precisely customized formatting layout template matching your layout request
+    const layoutOutputText = 
+        `For ff sensei\n` +
+        `General: ${general}%\n` +
+        `red dot: ${redDot}%\n` +
+        `2x Scope: ${scope2x}%\n` +
+        `4x Scope: ${scope4x}%\n` +
+        `button size: ${buttonSize}%\n` +
+        `dpi: ${finalDpi}`;
+
+    // Update panel display context metrics
+    const panel = document.getElementById('outputPanel');
+    panel.innerText = layoutOutputText;
+    panel.classList.add('visible');
+}
+</script>
+
+</body>
+</html>
