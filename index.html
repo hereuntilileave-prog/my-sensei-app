@@ -3,172 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEMWOODS CLONE - ELITE CONFIG GENERATOR V2.0</title>
+    <title>FF SENSEI - ELITE CONFIG GENERATOR V2.0</title>
     <style>
         :root {
-            --bg-dark: #070a12;
-            --border-neon: #ff2a5f;
-            --text-red: #ff2a5f;
-            --text-blue: #00d2ff;
-            --text-white: #ffffff;
-            --panel-bg: rgba(13, 20, 35, 0.85);
+            --bg-light: #ffffff;
+            --card-white: #f8fafc;
+            --input-bg: #f1f5f9;
+            --accent-red: #ff2a5f;
+            --border-color: #cbd5e1;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
         }
         body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: var(--bg-dark);
-            color: var(--text-white);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
             margin: 0;
             padding: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4));
         }
         .app-container {
             width: 100%;
             max-width: 440px;
-            border: 2px solid var(--border-neon);
-            background-color: var(--panel-bg);
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 0 20px rgba(255, 42, 95, 0.4);
+            border: 2px solid var(--accent-red);
+            background-color: var(--card-white);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(255, 42, 95, 0.1);
             box-sizing: border-box;
         }
         .main-title {
             text-align: center;
-            font-size: 32px;
+            font-size: 34px;
             font-weight: 900;
-            color: var(--text-white);
-            letter-spacing: 3px;
+            color: var(--text-dark);
+            letter-spacing: 2px;
             margin: 0;
-            font-family: 'Impact', sans-serif;
-            text-shadow: 0 0 10px var(--text-red);
+            font-family: 'Impact', 'Arial Black', sans-serif;
         }
         .sub-title {
             text-align: center;
             font-size: 11px;
-            color: var(--text-red);
+            color: var(--accent-red);
             letter-spacing: 2px;
             margin: 5px 0 25px 0;
             font-weight: bold;
+            text-transform: uppercase;
         }
         .input-label {
-            font-size: 11px;
-            color: #8fa0c0;
+            font-size: 12px;
+            color: var(--text-muted);
             text-transform: uppercase;
             margin-bottom: 6px;
             display: block;
             letter-spacing: 1px;
+            font-weight: 600;
         }
         .field-group {
             margin-bottom: 18px;
         }
         select, input {
             width: 100%;
-            padding: 10px;
-            background-color: #0b111e;
-            border: 1px solid #233354;
-            color: var(--text-white);
+            padding: 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-dark);
             font-family: inherit;
-            font-size: 14px;
+            font-size: 15px;
             box-sizing: border-box;
-            border-radius: 2px;
+            border-radius: 6px;
+            transition: border-color 0.2s;
         }
         select:focus, input:focus {
             outline: none;
-            border-color: var(--text-red);
+            border-color: var(--accent-red);
         }
         .range-toggle-container {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 5px;
+            gap: 8px;
             margin-bottom: 25px;
         }
         .range-btn {
-            background-color: #0b111e;
-            border: 1px solid #233354;
-            color: var(--text-white);
-            padding: 10px;
-            font-size: 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-dark);
+            padding: 12px;
+            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
             font-family: inherit;
+            border-radius: 6px;
             transition: all 0.2s;
         }
         .range-btn.active {
-            background-color: #b31033;
-            border-color: var(--text-red);
+            background-color: var(--accent-red);
+            border-color: var(--accent-red);
             color: white;
-            box-shadow: 0 0 8px rgba(255, 42, 95, 0.5);
+            box-shadow: 0 4px 12px rgba(255, 42, 95, 0.25);
         }
         .action-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .btn-gen {
-            padding: 12px 5px;
-            border: none;
+            padding: 14px 5px;
+            border: 1px solid var(--border-color);
             font-family: inherit;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 13px;
             cursor: pointer;
             text-transform: uppercase;
-            color: white;
-            border-radius: 2px;
+            border-radius: 6px;
+            transition: all 0.2s;
         }
         .btn-con {
-            background-color: #ffffff;
-            color: #000000;
+            background-color: var(--text-dark);
+            color: white;
+            border-color: var(--text-dark);
         }
         .btn-sin {
-            background-color: #ff2a5f;
+            background-color: var(--input-bg);
+            color: var(--text-dark);
+        }
+        .btn-gen.active-mode {
+            border: 2px solid var(--accent-red) !important;
+            box-shadow: 0 0 10px rgba(255, 42, 95, 0.3);
         }
         .output-panel {
-            border: 1px dashed rgba(255, 42, 95, 0.5);
-            background-color: rgba(5, 8, 15, 0.9);
-            padding: 15px;
-            border-radius: 2px;
+            border: 2px dashed var(--accent-red);
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
             display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         .output-panel.visible {
             display: block;
+            animation: fadeIn 0.3s ease-in-out;
         }
         .terminal-row {
             display: flex;
-            margin-bottom: 6px;
-            font-size: 13px;
+            margin-bottom: 10px;
+            font-size: 15px;
             letter-spacing: 0.5px;
         }
         .term-label {
-            width: 160px;
-            color: var(--text-red);
-            text-transform: uppercase;
+            width: 150px;
+            color: var(--text-dark);
+            font-weight: 600;
         }
         .term-dots {
-            color: var(--text-red);
-            margin-right: 8px;
+            color: var(--text-muted);
+            margin-right: 12px;
         }
         .term-val {
-            color: var(--text-white);
+            color: var(--accent-red);
             font-weight: bold;
         }
         .term-val.highlight {
-            color: #00ff88;
+            color: #0d9488;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div class="main-title">SYSTEMWOODS</div>
+    <div class="main-title">FF SENSEI</div>
     <div class="sub-title">ELITE CONFIG GENERATOR V2.0</div>
 
     <div class="field-group">
-        <label class="input-label">Select Brand / Marca</label>
+        <label class="input-label">Select Brand</label>
         <select id="brandSelect">
             <option value="Samsung">Samsung</option>
             <option value="Apple">Apple / iPhone</option>
@@ -180,76 +195,65 @@
     </div>
 
     <div class="field-group">
-        <label class="input-label">Enter Model / Modelo</label>
+        <label class="input-label">Enter Model</label>
         <input type="text" id="modelInput" placeholder="e.g., A05, S24, Poco X6...">
     </div>
 
-    <label class="input-label">Sight Calibration / Calibración de Mira</label>
+    <label class="input-label">Sight Calibration</label>
     <div class="range-toggle-container">
-        <button class="range-btn active" onclick="setRange('HIGH', this)">High / Alta</button>
-        <button class="range-btn" onclick="setRange('MEDIUM', this)">Medium / Media</button>
-        <button class="range-btn" onclick="setRange('LOW', this)">Low / Baja</button>
+        <button type="button" class="range-btn active" id="btn-high" onclick="setRange('HIGH')">Alta</button>
+        <button type="button" class="range-btn" id="btn-medium" onclick="setRange('MEDIUM')">Media</button>
+        <button type="button" class="range-btn" id="btn-low" onclick="setRange('LOW')">Baja</button>
     </div>
 
+    <label class="input-label">DPI Profiler</label>
     <div class="action-buttons">
-        <button class="btn-gen btn-con" onclick="generateConfig('CON DPI')">Generate Con DPI</button>
-        <button class="btn-gen btn-sin" onclick="generateConfig('SIN DPI')">Generate Sin DPI</button>
+        <button type="button" class="btn-gen btn-con" id="btn-con-mode" onclick="generateConfig('CON DPI')">Con DPI</button>
+        <button type="button" class="btn-gen btn-sin" id="btn-sin-mode" onclick="generateConfig('SIN DPI')">Sin DPI</button>
     </div>
 
     <div class="output-panel" id="outputPanel">
-        <div class="terminal-row" style="justify-content: center; color: var(--text-red); margin-bottom: 12px; font-weight: bold;">=== SYSTEM WOODS CONFIG ===</div>
-        <div class="terminal-row"><span class="term-label">Range</span><span class="term-dots">:</span><span class="term-val" id="out-range">HIGH</span></div>
-        <div class="terminal-row"><span class="term-label">Mode</span><span class="term-dots">:</span><span class="term-val" style="color:#ff2a5f;" id="out-mode">CON DPI (CUSTOM)</span></div>
-        <div class="terminal-row" style="border-bottom: 1px dashed #233354; margin: 8px 0;"></div>
-        <div class="terminal-row"><span class="term-label">Device</span><span class="term-dots">:</span><span class="term-val" id="out-device">A05</span></div>
-        <div class="terminal-row"><span class="term-label">System</span><span class="term-dots">:</span><span class="term-val" id="out-system">SAMSUNG</span></div>
-        <div class="terminal-row" style="border-bottom: 1px dashed #233354; margin: 8px 0;"></div>
-        <div class="terminal-row"><span class="term-label">General</span><span class="term-dots">:</span><span class="term-val" id="out-gen">193%</span></div>
-        <div class="terminal-row"><span class="term-label">Red Dot</span><span class="term-dots">:</span><span class="term-val" id="out-red">63%</span></div>
-        <div class="terminal-row"><span class="term-label">2x Scope</span><span class="term-dots">:</span><span class="term-val" id="out-2x">126%</span></div>
-        <div class="terminal-row"><span class="term-label">4x Scope</span><span class="term-dots">:</span><span class="term-val" id="out-4x">121%</span></div>
-        <div class="terminal-row"><span class="term-label">Fire Button</span><span class="term-dots">:</span><span class="term-val" id="out-btn">46%</span></div>
-        <div class="terminal-row"><span class="term-label">Target DPI</span><span class="term-dots">:</span><span class="term-val highlight" id="out-dpi">DPI: 450</span></div>
+        <div class="terminal-row" style="justify-content: center; color: var(--text-dark); margin-bottom: 15px; font-weight: bold; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">=== SENSEI PROFILE CONFIG ===</div>
+        <div class="terminal-row"><span class="term-label">General</span><span class="term-dots">:</span><span class="term-val" id="out-gen">0%</span></div>
+        <div class="terminal-row"><span class="term-label">Red Dot</span><span class="term-dots">:</span><span class="term-val" id="out-red">0%</span></div>
+        <div class="terminal-row"><span class="term-label">2x Scope</span><span class="term-dots">:</span><span class="term-val" id="out-2x">0%</span></div>
+        <div class="terminal-row"><span class="term-label">4x Scope</span><span class="term-dots">:</span><span class="term-val" id="out-4x">0%</span></div>
+        <div class="terminal-row"><span class="term-label">Button Size</span><span class="term-dots">:</span><span class="term-val" id="out-btn">0%</span></div>
+        <div class="terminal-row"><span class="term-label">Dpi</span><span class="term-dots">:</span><span class="term-val highlight" id="out-dpi">Standard</span></div>
     </div>
 </div>
 
 <script>
-let currentRange = 'HIGH';
+let selectedRange = 'HIGH';
 
-function setRange(rangeValue, element) {
-    currentRange = rangeValue;
-    const buttons = document.querySelectorAll('.range-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
-    element.classList.add('active');
+function setRange(rangeValue) {
+    selectedRange = rangeValue;
+    
+    // Clear active status from all range elements
+    document.getElementById('btn-high').classList.remove('active');
+    document.getElementById('btn-medium').classList.remove('active');
+    document.getElementById('btn-low').classList.remove('active');
+    
+    // Assign active status to target element
+    if (rangeValue === 'HIGH') document.getElementById('btn-high').classList.add('active');
+    else if (rangeValue === 'MEDIUM') document.getElementById('btn-medium').classList.add('active');
+    else if (rangeValue === 'LOW') document.getElementById('btn-low').classList.add('active');
 }
 
 function generateConfig(modeType) {
     const brand = document.getElementById('brandSelect').value;
-    const model = document.getElementById('modelInput').value.trim() || "Generic Device";
+    const model = document.getElementById('modelInput').value.trim().toUpperCase() || "GENERIC";
     
-    // Core foundational math engine mimicking the pure-red sensitivity metrics
-    let baseGen = 95, baseRed = 70, base2x = 85, base4x = 80, fireBtn = 46, finalDpi = "Standard";
+    // Manage active styles for mode buttons
+    document.getElementById('btn-con-mode').classList.remove('active-mode');
+    document.getElementById('btn-sin-mode').classList.remove('active-mode');
+    if(modeType === 'CON DPI') document.getElementById('btn-con-mode').classList.add('active-mode');
+    else document.getElementById('btn-sin-mode').classList.add('active-mode');
 
-    if (currentRange === 'HIGH') {
-        baseGen = 193; baseRed = 63; base2x = 126; base4x = 121;
-    } else if (currentRange === 'MEDIUM') {
-        baseGen = 175; baseRed = 72; base2x = 114; base4x = 108;
-    } else {
-        baseGen = 150; baseRed = 80; base2x = 98; base4x = 92;
-    }
+    // Advanced mathematical parameters to eliminate vertical camera friction
+    let genSens = 98, redDot = 85, scope2x = 90, scope4x = 88, buttonSize = 46, calculatedDpi = "Standard";
 
-    // Adapt logic variables based on Con DPI vs Sin DPI selections
-    if (modeType === 'CON DPI') {
-        document.getElementById('out-mode').innerText = "CON DPI (CUSTOM)";
-        if (brand === 'Samsung') finalDpi = "DPI: 450";
-        else if (brand === 'Xiaomi') finalDpi = "DPI: 490";
-        else if (brand === 'Infinix' || brand === 'Tecno') finalDpi = "DPI: 520";
-        else finalDpi = "DPI: 411";
-        fireBtn = 46;
-    } else {
-        document.getElementById('out-mode').innerText = "SIN DPI (STANDARD)";
-        finalDpi = "Standard (No DPI)";
-        baseGen = Math.round(baseGen * 0.85); // Stabilize drag physics
-        fireBtn = 50;
-    }
-
+    // Step 1: Base Tier Scaling via Range Selections
+    if (selectedRange === 'HIGH') {
+        genSens = 195; redDot = 92; scope2x = 128; scope4x = 124; buttonSize = 44;
+    } else if (selectedRange === 'MEDIUM') {
