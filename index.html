@@ -75,66 +75,55 @@
             font-size: 15px;
             box-sizing: border-box;
             border-radius: 6px;
-            transition: border-color 0.2s;
         }
-        select:focus, input:focus {
-            outline: none;
-            border-color: var(--accent-red);
-        }
-        .range-toggle-container {
+        .toggle-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 8px;
+            margin-bottom: 20px;
+        }
+        .dpi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
             margin-bottom: 25px;
         }
-        .range-btn {
+        .btn-option {
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
             color: var(--text-dark);
-            padding: 12px;
+            padding: 12px 5px;
             font-size: 13px;
             font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
             font-family: inherit;
             border-radius: 6px;
-            transition: all 0.2s;
+            text-align: center;
         }
-        .range-btn.active {
+        .btn-option.active {
             background-color: var(--accent-red);
             border-color: var(--accent-red);
             color: white;
             box-shadow: 0 4px 12px rgba(255, 42, 95, 0.25);
         }
-        .action-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .btn-gen {
-            padding: 14px 5px;
-            border: 1px solid var(--border-color);
-            font-family: inherit;
+        .btn-action-trigger {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
             font-weight: bold;
-            font-size: 13px;
             cursor: pointer;
             text-transform: uppercase;
-            border-radius: 6px;
-            transition: all 0.2s;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
         }
-        .btn-con {
-            background-color: var(--text-dark);
-            color: white;
-            border-color: var(--text-dark);
-        }
-        .btn-sin {
-            background-color: var(--input-bg);
-            color: var(--text-dark);
-        }
-        .btn-gen.active-mode {
-            border: 2px solid var(--accent-red) !important;
-            box-shadow: 0 0 10px rgba(255, 42, 95, 0.3);
+        .btn-action-trigger:active {
+            background: #ff2a5f;
         }
         .output-panel {
             border: 2px dashed var(--accent-red);
@@ -142,17 +131,14 @@
             padding: 20px;
             border-radius: 8px;
             display: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         .output-panel.visible {
             display: block;
-            animation: fadeIn 0.3s ease-in-out;
         }
         .terminal-row {
             display: flex;
             margin-bottom: 10px;
             font-size: 15px;
-            letter-spacing: 0.5px;
         }
         .term-label {
             width: 150px;
@@ -169,10 +155,6 @@
         }
         .term-val.highlight {
             color: #0d9488;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -200,60 +182,79 @@
     </div>
 
     <label class="input-label">Sight Calibration</label>
-    <div class="range-toggle-container">
-        <button type="button" class="range-btn active" id="btn-high" onclick="setRange('HIGH')">Alta</button>
-        <button type="button" class="range-btn" id="btn-medium" onclick="setRange('MEDIUM')">Media</button>
-        <button type="button" class="range-btn" id="btn-low" onclick="setRange('LOW')">Baja</button>
+    <div class="toggle-grid">
+        <div class="btn-option active" id="opt-high" onclick="selectRange('HIGH')">Alta</div>
+        <div class="btn-option" id="opt-medium" onclick="selectRange('MEDIUM')">Media</div>
+        <div class="btn-option" id="opt-low" onclick="selectRange('LOW')">Baja</div>
     </div>
 
     <label class="input-label">DPI Profiler</label>
-    <div class="action-buttons">
-        <button type="button" class="btn-gen btn-con" id="btn-con-mode" onclick="generateConfig('CON DPI')">Con DPI</button>
-        <button type="button" class="btn-gen btn-sin" id="btn-sin-mode" onclick="generateConfig('SIN DPI')">Sin DPI</button>
+    <div class="dpi-grid">
+        <div class="btn-option active" id="opt-con" onclick="selectDpiMode('CON DPI')">Con DPI</div>
+        <div class="btn-option" id="opt-sin" onclick="selectDpiMode('SIN DPI')">Sin DPI</div>
     </div>
+
+    <!-- NEW DEDICATED GENERATOR TRIGGER BUTTON -->
+    <button type="button" class="btn-action-trigger" onclick="processAiCalibration()">Generate AI Config</button>
 
     <div class="output-panel" id="outputPanel">
         <div class="terminal-row" style="justify-content: center; color: var(--text-dark); margin-bottom: 15px; font-weight: bold; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">=== SENSEI PROFILE CONFIG ===</div>
-        <div class="terminal-row"><span class="term-label">General</span><span class="term-dots">:</span><span class="term-val" id="out-gen">0%</span></div>
-        <div class="terminal-row"><span class="term-label">Red Dot</span><span class="term-dots">:</span><span class="term-val" id="out-red">0%</span></div>
-        <div class="terminal-row"><span class="term-label">2x Scope</span><span class="term-dots">:</span><span class="term-val" id="out-2x">0%</span></div>
-        <div class="terminal-row"><span class="term-label">4x Scope</span><span class="term-dots">:</span><span class="term-val" id="out-4x">0%</span></div>
-        <div class="terminal-row"><span class="term-label">Button Size</span><span class="term-dots">:</span><span class="term-val" id="out-btn">0%</span></div>
-        <div class="terminal-row"><span class="term-label">Dpi</span><span class="term-dots">:</span><span class="term-val highlight" id="out-dpi">Standard</span></div>
+        <div class="terminal-row"><span class="term-label">General</span><span class="term-dots">:</span><span class="term-val" id="out-gen">-</span></div>
+        <div class="terminal-row"><span class="term-label">Red Dot</span><span class="term-dots">:</span><span class="term-val" id="out-red">-</span></div>
+        <div class="terminal-row"><span class="term-label">2x Scope</span><span class="term-dots">:</span><span class="term-val" id="out-2x">-</span></div>
+        <div class="terminal-row"><span class="term-label">4x Scope</span><span class="term-dots">:</span><span class="term-val" id="out-4x">-</span></div>
+        <div class="terminal-row"><span class="term-label">Button Size</span><span class="term-dots">:</span><span class="term-val" id="out-btn">-</span></div>
+        <div class="terminal-row"><span class="term-label">Dpi</span><span class="term-dots">:</span><span class="term-val highlight" id="out-dpi">-</span></div>
     </div>
 </div>
 
 <script>
-let selectedRange = 'HIGH';
+// Track configuration states independently
+let globalRange = 'HIGH';
+let globalDpiMode = 'CON DPI';
 
-function setRange(rangeValue) {
-    selectedRange = rangeValue;
+function selectRange(rangeValue) {
+    globalRange = rangeValue;
+    document.getElementById('opt-high').classList.remove('active');
+    document.getElementById('opt-medium').classList.remove('active');
+    document.getElementById('opt-low').classList.remove('active');
     
-    // Clear active status from all range elements
-    document.getElementById('btn-high').classList.remove('active');
-    document.getElementById('btn-medium').classList.remove('active');
-    document.getElementById('btn-low').classList.remove('active');
-    
-    // Assign active status to target element
-    if (rangeValue === 'HIGH') document.getElementById('btn-high').classList.add('active');
-    else if (rangeValue === 'MEDIUM') document.getElementById('btn-medium').classList.add('active');
-    else if (rangeValue === 'LOW') document.getElementById('btn-low').classList.add('active');
+    if (rangeValue === 'HIGH') document.getElementById('opt-high').classList.add('active');
+    else if (rangeValue === 'MEDIUM') document.getElementById('opt-medium').classList.add('active');
+    else if (rangeValue === 'LOW') document.getElementById('opt-low').classList.add('active');
 }
 
-function generateConfig(modeType) {
+function selectDpiMode(modeValue) {
+    globalDpiMode = modeValue;
+    document.getElementById('opt-con').classList.remove('active');
+    document.getElementById('opt-sin').classList.remove('active');
+    
+    if (modeValue === 'CON DPI') document.getElementById('opt-con').classList.add('active');
+    else if (modeValue === 'SIN DPI') document.getElementById('opt-sin').classList.add('active');
+}
+
+function processAiCalibration() {
     const brand = document.getElementById('brandSelect').value;
     const model = document.getElementById('modelInput').value.trim().toUpperCase() || "GENERIC";
-    
-    // Manage active styles for mode buttons
-    document.getElementById('btn-con-mode').classList.remove('active-mode');
-    document.getElementById('btn-sin-mode').classList.remove('active-mode');
-    if(modeType === 'CON DPI') document.getElementById('btn-con-mode').classList.add('active-mode');
-    else document.getElementById('btn-sin-mode').classList.add('active-mode');
 
-    // Advanced mathematical parameters to eliminate vertical camera friction
-    let genSens = 98, redDot = 85, scope2x = 90, scope4x = 88, buttonSize = 46, calculatedDpi = "Standard";
+    // Mathematical blueprint to secure accurate tracking dynamics
+    let general = 95, redDot = 80, scope2x = 88, scope4x = 84, button = 46, dpiOutput = "Standard";
 
-    // Step 1: Base Tier Scaling via Range Selections
-    if (selectedRange === 'HIGH') {
-        genSens = 195; redDot = 92; scope2x = 128; scope4x = 124; buttonSize = 44;
-    } else if (selectedRange === 'MEDIUM') {
+    // 1. Calibration Profiles Matrices
+    if (globalRange === 'HIGH') {
+        general = 193; redDot = 63; scope2x = 126; scope4x = 121; button = 44;
+    } else if (globalRange === 'MEDIUM') {
+        general = 172; redDot = 74; scope2x = 110; scope4x = 104; button = 48;
+    } else if (globalRange === 'LOW') {
+        general = 145; redDot = 82; scope2x = 95; scope4x = 90; button = 52;
+    }
+
+    // 2. Hardware Model Character Hash Processing (Unique dynamic shift for every specific typed model)
+    let modelWeight = 0;
+    for (let i = 0; i < model.length; i++) {
+        modelWeight += model.charCodeAt(i);
+    }
+    let balanceShift = (modelWeight % 8) - 4; // safely shifts data output points up or down slightly
+
+    general = Math.max(90, Math.min(200, general + balanceShift));
+    redDot = Math.max(50, Math.min(100, redDot + Math.round(balanceShift / 2)));
