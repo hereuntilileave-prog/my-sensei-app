@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sensei Pro - Universal Sensitivity Generator</title>
+    <style>
+        :root {
+            --bg-dark: #0a0e14;
+            --card-dark: #121824;
+            --input-dark: #1b2436;
+            --neon-red: #ff3838;
+            --neon-green: #00ff88;
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+            --border: #2d3748;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .app-card {
+            background-color: var(--card-dark);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            width: 100%;
+            max-width: 460px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .header h1 {
+            color: var(--neon-red);
+            font-size: 26px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0 0 5px 0;
+            text-shadow: 0 0 10px rgba(255, 56, 56, 0.3);
+        }
+        .header p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 13px;
+        }
+        .field {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--input-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--neon-red);
+            box-shadow: 0 0 8px rgba(255, 56, 56, 0.2);
+        }
+        .btn-generate {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--neon-red), #b31010);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        .btn-generate:active {
+            transform: scale(0.98);
+        }
+        .dashboard {
+            margin-top: 25px;
+            border-top: 1px dashed var(--border);
+            padding-top: 20px;
+            display: none;
+        }
+        .dashboard.visible {
+            display: block;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .dash-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            color: var(--neon-green);
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .stat-box {
+            background-color: var(--input-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .stat-val {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .dpi-box {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        .dpi-label {
+            font-size: 11px;
+            color: var(--neon-green);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .dpi-val {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--neon-green);
+            margin-top: 2px;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-card">
+    <div class="header">
+        <h1>AI Sensei Pro</h1>
+        <p>Universal Calibration Engine</p>
+    </div>
+
+    <div class="field">
+        <label>Device Brand</label>
+        <select id="brand" onchange="handleBrandChange()">
+            <option value="Universal">Other / Dynamic Engine (Any Brand)</option>
+            <option value="Apple">Apple (iPhone / iPad)</option>
+            <option value="Samsung">Samsung</option>
+            <option value="Xiaomi">Xiaomi / Poco / Redmi</option>
+            <option value="Infinix">Infinix</option>
+            <option value="Tecno">Tecno</option>
+            <option value="Motorola">Motorola</option>
+            <option value="Realme">Realme</option>
+            <option value="Oppo">Oppo / Vivo</option>
+            <option value="Huawei">Huawei / Honor</option>
+            <option value="PC">Emulator / PC</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label>Model Name / Series</label>
+        <input type="text" id="modelInput" placeholder="e.g., Galaxy S24, Poco X6, Note 40 Pro...">
+    </div>
+
+    <div class="field">
+        <label>Device RAM</label>
+        <select id="ram">
+            <option value="3">2 GB - 3 GB (Low Tier)</option>
+            <option value="4">4 GB (Mid Tier)</option>
+            <option value="6" selected>6 GB (Standard Gaming)</option>
+            <option value="8">8 GB (High Performance)</option>
+            <option value="12">12 GB - 16 GB+ (Flagship Tier)</option>
+        </select>
+    </div>
+
+    <button class="btn-generate" onclick="runCalibration()">Calculate Settings</button>
+
+    <div class="dashboard" id="dashboard">
+        <div class="dash-title">⚙️ Calibrated Configuration</div>
+        <div class="grid">
+            <div class="stat-box"><div class="stat-label">General</div><div class="stat-val" id="v-gen">0</div></div>
+            <div class="stat-box"><div class="stat-label">Red Dot</div><div class="stat-val" id="v-red">0</div></div>
+            <div class="stat-box"><div class="stat-label">2x Scope</div><div class="stat-val" id="v-2x">0</div></div>
+            <div class="stat-box"><div class="stat-label">4x Scope</div><div class="stat-val" id="v-4x">0</div></div>
+            <div class="stat-box"><div class="stat-label">Sniper</div><div class="stat-val" id="v-snip">0</div></div>
+            <div class="stat-box"><div class="stat-label">Free Look</div><div class="stat-val" id="v-free">0</div></div>
+        </div>
+        <div class="dpi-box">
+            <div class="dpi-label">Recommended DPI Modification</div>
+            <div class="dpi-val" id="v-dpi">Standard</div>
+        </div>
+    </div>
+</div>
+
+<script>
+const structuralDatabase = {
+    "apple": { gen: 94, red: 89, s2: 84, s4: 80, sn: 48, fr: 65, dpi: "Standard (No DPI Needed)" },
+    "pc": { gen: 45, red: 40, s2: 38, s4: 35, sn: 25, fr: 30, dpi: "BlueStacks / MSI: 240 DPI" }
+};
+
+function handleBrandChange() {
+    const brand = document.getElementById("brand").value;
+    const ramSelect = document.getElementById("ram");
+    if (brand === "PC") {
+        ramSelect.disabled = true;
+    } else {
+        ramSelect.disabled = false;
+    }
+}
+
+function runCalibration() {
+    const brand = document.getElementById("brand").value;
+    const modelText = document.getElementById("modelInput").value.trim().toLowerCase();
+    const ram = parseInt(document.getElementById("ram").value);
+
+    let output = { gen: 95, red: 92, s2: 88, s4: 84, sn: 50, fr: 70, dpi: "411" };
+
+    if (brand === "Apple" || modelText.includes("iphone") || modelText.includes("ipad")) {
+        output = { ...structuralDatabase.apple };
+    } else if (brand === "PC") {
+        output = { ...structuralDatabase.pc };
+    } else {
+        if (ram <= 3) {
+            output.gen = 100; output.red = 98; output.s2 = 96; output.s4 = 94; output.sn = 62; output.fr = 85;
+            output.dpi = "520 DPI";
+        } else if (ram === 4) {
+            output.gen = 99; output.red = 96; output.s2 = 92; output.s4 = 89; output.sn = 55; output.fr = 80;
+            output.dpi = "490 DPI";
+        } else if (ram === 6) {
+            output.gen = 97; output.red = 93; output.s2 = 88; output.s4 = 85; output.sn = 50; output.fr = 75;
+            output.dpi = "450 DPI";
+        } else if (ram === 8) {
+            output.gen = 95; output.red = 90; output.s2 = 85; output.s4 = 82; output.sn = 46; output.fr = 70;
+            output.dpi = "411 DPI";
+        } else if (ram >= 12) {
+            output.gen = 92; output.red = 86; output.s2 = 82; output.s4 = 78; output.sn = 42; output.fr = 60;
+            output.dpi = "Standard (Width 360-384)";
+        }
+
+        if (brand === "Infinix" || brand === "Tecno" || modelText.includes("hot") || modelText.includes("spark")) {
+            output.gen = Math.min(100, output.gen + 2);
+            output.red = Math.min(100, output.red + 3);
+            if(ram <= 6) output.dpi = "540 DPI";
+        }
+    }
+
